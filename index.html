@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pemesanan Tiket Konser</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 28px 15px;
+      font-family: Arial, sans-serif;
+      background: #f3f6f5;
+      color: #374151;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 460px;
+      margin: 0 auto;
+      padding: 28px;
+      background: white;
+      border-radius: 9px;
+      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      font-size: 18px;
+      margin: 0 0 8px;
+      color: #374151;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 22px;
+    }
+
+    hr {
+      border: 0;
+      border-top: 1px solid #eee;
+      margin-bottom: 25px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 6px;
+      margin-bottom: 20px;
+      align-items: start;
+    }
+
+    .form-row > label {
+      font-size: 12px;
+      font-weight: bold;
+      padding-top: 7px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      min-width: 0;
+      padding: 10px;
+      border: 1px solid #d9dfe3;
+      border-radius: 5px;
+      background: #fff;
+      color: #374151;
+      font: inherit;
+      font-size: 12px;
+      outline: none;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #3486cc;
+      box-shadow: 0 0 0 2px rgba(52, 134, 204, 0.12);
+    }
+
+    .two-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .hint {
+      display: block;
+      font-size: 10px;
+      color: #888;
+      margin-top: 4px;
+    }
+
+    .phone-input {
+      display: grid;
+      grid-template-columns: 0.7fr 1.3fr;
+      gap: 6px;
+    }
+
+    .seat-options {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 12px;
+    }
+
+    .seat-options label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+    }
+
+    .seat-options input[type="radio"] {
+      width: auto;
+      margin: 0;
+      accent-color: #3486cc;
+    }
+
+    .other-seat {
+      flex: 1;
+    }
+
+    textarea {
+      min-height: 85px;
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      padding: 13px;
+      background: #3486cc;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    button:hover {
+      background: #2673b5;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .message {
+      display: none;
+      padding: 13px;
+      margin-bottom: 18px;
+      border-radius: 5px;
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .success {
+      display: block;
+      color: #166534;
+      background: #dcfce7;
+      border: 1px solid #bbf7d0;
+    }
+
+    .error {
+      display: block;
+      color: #991b1b;
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+    }
+
+    .result-title {
+      font-size: 17px;
+      margin: 0 0 8px;
+    }
+
+    .reset-button {
+      margin-top: 12px;
+      background: #475569;
+    }
+
+    .reset-button:hover {
+      background: #334155;
+    }
+
+    @media (max-width: 400px) {
+      .container {
+        padding: 20px 15px;
+      }
+
+      .form-row {
+        grid-template-columns: 88px minmax(0, 1fr);
+        gap: 5px;
+      }
+
+      h2 {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <h2>Tiket ke Konser Terhebat Yang Pernah Ada!</h2>
+    <p class="subtitle">
+      Dapatkan tiket hari ini sebelum terlambat!
+    </p>
+
+    <hr>
+
+    <div id="message" class="message" role="status"
+         aria-live="polite"></div>
+
+    <form id="ticketForm">
+      <div class="form-row">
+        <label for="firstName">Nama</label>
+        <div class="two-columns">
+          <div>
+            <input id="firstName" name="firstName"
+                   type="text" placeholder="Nama depan"
+                   autocomplete="given-name" required>
+            <span class="hint">Nama Depan</span>
+          </div>
+          <div>
+            <input id="lastName" name="lastName"
+                   type="text" placeholder="Nama belakang"
+                   autocomplete="family-name" required>
+            <span class="hint">Nama Belakang</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="email">E-mail</label>
+        <div>
+          <input id="email" name="email" type="email"
+                 placeholder="contoh: nama@contoh.com"
+                 autocomplete="email" required>
+          <span class="hint">contoh@contoh.com</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="areaCode">Nomor Telepon</label>
+        <div class="phone-input">
+          <div>
+            <input id="areaCode" name="areaCode" type="text"
+                   placeholder="+62" value="+62" required>
+            <span class="hint">Kode Area</span>
+          </div>
+          <div>
+            <input id="phone" name="phone" type="tel"
+                   placeholder="Nomor telepon"
+                   autocomplete="tel-national"
+                   pattern="[0-9 ]{6,15}" required>
+            <span class="hint">Nomor Telepon</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Pilihan tempat duduk</label>
+        <div class="seat-options">
+          <label>
+            <input type="radio" name="seat"
+                   value="Panggung Depan" required>
+            Panggung Depan
+          </label>
+
+          <label>
+            <input type="radio" name="seat" value="Tengah">
+            Tengah
+          </label>
+
+          <label>
+            <input type="radio" name="seat" value="Balkon">
+            Balkon
+          </label>
+
+          <label>
+            <input type="radio" name="seat" value="Lainnya"
+                   id="otherRadio">
+            <input class="other-seat" id="otherSeat"
+                   type="text" placeholder="Lainnya"
+                   aria-label="Tempat duduk lainnya"
+                   disabled>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="quantity">Jumlah Tiket</label>
+        <div>
+          <input id="quantity" name="quantity" type="number"
+                 min="1" max="10" step="1"
+                 placeholder="Contoh: 2" required>
+          <span class="hint">Maksimal 10 tiket</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="question">Ada pertanyaan?</label>
+        <textarea id="question" name="question"
+                  placeholder="Ketik di sini..."></textarea>
+      </div>
+
+      <button type="submit">Dapatkan Tiket!</button>
+    </form>
+
+    <button type="button" id="resetButton"
+            class="reset-button" hidden>
+      Pesan Lagi
+    </button>
+  </main>
+
+  <script>
+    const form = document.getElementById("ticketForm");
+    const message = document.getElementById("message");
+    const otherRadio = document.getElementById("otherRadio");
+    const otherSeat = document.getElementById("otherSeat");
+    const resetButton = document.getElementById("resetButton");
+
+    // Aktifkan kolom tempat duduk lainnya
+    otherRadio.addEventListener("change", function () {
+      otherSeat.disabled = !this.checked;
+      otherSeat.required = this.checked;
+
+      if (this.checked) {
+        otherSeat.focus();
+      }
+    });
+
+    // Nonaktifkan kolom lainnya jika pilihan berubah
+    form.querySelectorAll('input[name="seat"]').forEach(radio => {
+      radio.addEventListener("change", function () {
+        if (this.value !== "Lainnya") {
+          otherSeat.disabled = true;
+          otherSeat.required = false;
+          otherSeat.value = "";
+        }
+      });
+    });
+
+    // Proses saat tombol ditekan
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      message.className = "message";
+      message.textContent = "";
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const firstName =
+        document.getElementById("firstName").value.trim();
+      const lastName =
+        document.getElementById("lastName").value.trim();
+      const email =
+        document.getElementById("email").value.trim();
+      const areaCode =
+        document.getElementById("areaCode").value.trim();
+      const phone =
+        document.getElementById("phone").value.trim();
+      const quantity =
+        Number(document.getElementById("quantity").value);
+      const question =
+        document.getElementById("question").value.trim();
+
+      const selectedSeat =
+        form.querySelector('input[name="seat"]:checked');
+
+      if (!selectedSeat) {
+        alert("Silakan pilih tempat duduk.");
+        return;
+      }
+
+      if (selectedSeat.value === "Lainnya" &&
+          !otherSeat.value.trim()) {
+        otherSeat.setCustomValidity(
+          "Silakan tulis pilihan tempat duduk."
+        );
+        otherSeat.reportValidity();
+        otherSeat.setCustomValidity("");
+        return;
+      }
+
+      if (!Number.isInteger(quantity) ||
+          quantity < 1 || quantity > 10) {
+        alert("Jumlah tiket harus antara 1 sampai 10.");
+        return;
+      }
+
+      const seat = selectedSeat.value === "Lainnya"
+        ? otherSeat.value.trim()
+        : selectedSeat.value;
+
+      // Tampilkan konfirmasi pemesanan
+      message.className = "message success";
+
+      const title = document.createElement("h3");
+      title.className = "result-title";
+      title.textContent = "Pemesanan Berhasil!";
+
+      const details = document.createElement("div");
+
+      function addLine(label, value) {
+        const line = document.createElement("p");
+        const strong = document.createElement("strong");
+        strong.textContent = label + ": ";
+        line.append(strong, document.createTextNode(value));
+        details.appendChild(line);
+      }
+
+      addLine("Nama", firstName + " " + lastName);
+      addLine("E-mail", email);
+      addLine("Telepon", areaCode + " " + phone);
+      addLine("Tempat duduk", seat);
+      addLine("Jumlah tiket", String(quantity));
+
+      if (question) {
+        addLine("Pertanyaan", question);
+      }
+
+      const note = document.createElement("p");
+      note.textContent =
+        "Ini adalah konfirmasi demo. Pemesanan belum tersimpan di server.";
+      details.appendChild(note);
+
+      message.replaceChildren(title, details);
+
+      form.hidden = true;
+      resetButton.hidden = false;
+
+      message.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    });
+
+    // Tombol untuk melakukan pemesanan baru
+    resetButton.addEventListener("click", function () {
+      form.reset();
+      form.hidden = false;
+      resetButton.hidden = true;
+      otherSeat.disabled = true;
+      otherSeat.required = false;
+
+      message.className = "message";
+      message.replaceChildren();
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  </script>
+</body>
+</html>
